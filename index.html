@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style>
+			*{
+				margin:0;
+				padding:0;
+			}
+			ul>li{
+				list-style: none;
+			}
+			ul.list{
+				padding: 40px;
+			}
+			ul.list>li{
+				width:200px;
+				height:300px;
+				background:#666;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				float: left;
+				margin-right:34px;
+				color:#fff;
+				cursor: pointer;
+			}
+			ul.list>li:nth-child(8n){
+				margin-right:0;
+			}
+			.popup{
+				position:fixed;
+				top:0;
+				left:0;
+				bottom:0;
+				right:0;
+				margin:auto;
+				background:rgba(0,0,0,.5);
+				display: none;
+				justify-content: center;
+				align-items: center;
+				
+			}
+			.popup-cont{
+				width:400px;
+				box-sizing: border-box;
+				height:auto;
+				padding:30px;
+				background: #fff;
+			}
+			.practice>li,
+			.add-practice>li{
+				margin-top:5px;
+			}
+			.check,.add-check{
+				width:20px;
+				height:20px;
+				float: right;
+				cursor: pointer;
+			}
+			.popup-cont span{
+				clear: both;
+				display: block;
+			}
+			.popup-cont ul{
+				overflow: hidden;
+			}
+			.spec,.taste,.practice,.add-practice{
+				padding:10px 0 10px 40px
+			}
+			.taste>li,
+			.spec>li{
+				float: left;
+				margin-right:5px;
+				border:1px solid #fff;
+				padding:5px 10px;
+				cursor: pointer;
+			}
+			.taste>li.active,
+			.spec>li.active
+			{
+				border-color:#666666;
+				background: #CCCCCC;
+			}
+			.buttons{
+				clear: both;
+				display: flex;
+				justify-content: space-between;
+				
+			}
+			.buttons>button{
+				margin-top:30px;
+				flex: 1;
+				padding:10px 0px;
+				display: block;
+				background:#f1f1f1;
+				border:2px solid #ccc;
+				margin-right:30px;
+				cursor: pointer;
+				font-size:16px;
+			}
+			.buttons>button:last-child{
+				margin-right: 0;
+			}
+			.shop-cart{
+				clear:both;
+				padding: 40px;
+				width: 100%;
+				text-align: center;
+			}
+			.shop-cart td,
+			.shop-cart th{
+				border-bottom: 2px solid #666666;
+				padding: 10px;
+			}
+			.pop{
+				position:absolute;
+				top:0;
+				left:0;
+				bottom:0;
+				right:0;
+				margin:auto;
+				display: none;
+				justify-content: center;
+				align-items: center;
+				
+			}
+			.pop.active {
+				display: flex;
+			}
+			.pop .alert{
+				padding:10px 20px;
+				box-sizing: border-box;
+				background:rgba(0,0,0,.8);
+				border-radius:5px;
+				color:#fff;
+			}
+			.shop-cart .btn{
+				border: none;
+    			background: transparent;
+    			cursor: pointer;
+    			color:darkblue;
+			}
+			.shop-cart .del{
+				border: none;
+    			background: transparent;
+    			cursor: pointer;
+    			color:red;
+    			margin-left:10px;
+			}
+		</style>
+	</head>
+	<body>
+		<ul class="list">
+		</ul>
+		<div class="popup">
+			<!--<div class="popup-cont">
+				<span>做法:</span>
+				<ul class="practice">
+					<li>蟹黃(30元) <input type="checkbox" class="check" /></li>
+					<li>龍蝦8(25元) <input type="checkbox" class="check" /></li>
+				</ul>
+				<span>口味:</span>
+				<ul class="taste">
+					<li>不辣</li>
+					<li>辣</li>
+				</ul>
+				<div class="buttons">
+					<button class="confirm-btn">确定</button>
+					<button class="cancel-btn">取消</button>
+				</div>
+			</div>-->
+		</div>
+		<table  class="shop-cart" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr>
+					<th>序號</th>
+					<th>产品名称</th>
+					<th>做法</th>
+					<th>新增做法</th>
+					<th>口味</th>
+					<th>規格</th>
+					<th>数量</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+			
+		</table>
+		<script type="text/javascript" src="js/md5encrypt.js" ></script>
+		<script>
+			//创建虚拟数据
+			var data = [
+				{id:0,shopID:hex_md5("膏蟹"),name:"膏蟹",spec:[],practice:[
+					{name:"蟹黃",price:"30元",number:1,pid:hex_md5("蟹黃")},
+					{name:"龍蝦8",price:"25元",number:1,pid:hex_md5("龍蝦8")},
+					{name:"龍蝦9",price:"35元",number:1,pid:hex_md5("龍蝦9")},
+					{name:"龍蝦3",price:"40元",number:1,pid:hex_md5("龍蝦3")},
+					{name:"龍蝦4",price:"20元",number:1,pid:hex_md5("龍蝦4")}
+				],addPractice:[
+					{name:"面粉",price:"30元",number:1,pid:hex_md5("面粉")},
+					{name:"河粉",price:"25元",number:1,pid:hex_md5("河粉")},
+					{name:"桃花果",price:"35元",number:1,pid:hex_md5("桃花果")},
+					{name:"米粉",price:"40元",number:1,pid:hex_md5("米粉")}
+				],taste:["不辣","微辣","中辣","大辣","特辣"]},
+				{id:1,shopID:hex_md5("明蝦"),name:"明蝦",spec:[],practice:[
+					{name:"蟹黃",price:"30元",number:1,pid:hex_md5("蟹黃")},
+					{name:"龍蝦8",price:"25元",number:1,pid:hex_md5("龍蝦8")},
+					{name:"龍蝦9",price:"35元",number:1,pid:hex_md5("龍蝦9")},
+					{name:"龍蝦3",price:"40元",number:1,pid:hex_md5("龍蝦3")},
+					{name:"龍蝦4",price:"20元",number:1,pid:hex_md5("龍蝦4")}
+				],taste:["不辣","微辣","中辣","大辣","特辣"]},
+				{id:2,shopID:hex_md5("蛙蟹"),name:"蛙蟹",spec:[],practice:[
+					{name:"蟹黃",price:"30元",number:1,pid:hex_md5("蟹黃")},
+					{name:"龍蝦8",price:"25元",number:1,pid:hex_md5("龍蝦8")},
+					{name:"龍蝦9",price:"35元",number:1,pid:hex_md5("龍蝦9")},
+					{name:"龍蝦3",price:"40元",number:1,pid:hex_md5("龍蝦3")},
+					{name:"龍蝦4",price:"20元",number:1,pid:hex_md5("龍蝦4")}
+				],taste:["不辣","微辣","中辣","大辣","特辣"]},
+				{id:3,shopID:hex_md5("雞蟹"),name:"雞蟹",spec:[],practice:[
+					{name:"蟹黃",price:"30元",number:1,pid:hex_md5("蟹黃")},
+					{name:"龍蝦8",price:"25元",number:1,pid:hex_md5("龍蝦8")},
+					{name:"龍蝦9",price:"35元",number:1,pid:hex_md5("龍蝦9")},
+					{name:"龍蝦3",price:"40元",number:1,pid:hex_md5("龍蝦3")},
+					{name:"龍蝦4",price:"20元",number:1,pid:hex_md5("龍蝦4")}
+				],taste:["不辣","微辣","中辣","大辣","特辣"]},
+				{id:4,shopID:hex_md5("茄子"),name:"茄子",spec:["小份","中份","大份"],practice:[
+				],taste:["不辣","微辣","中辣","大辣","特辣"]},
+				{id:5,shopID:hex_md5("豆角"),name:"豆角",spec:[],practice:[
+				],taste:["不辣","微辣","中辣","大辣","特辣"]},
+				{id:6,shopID:hex_md5("白菜"),name:"白菜",spec:["小份","中份","大份"],practice:[
+				],taste:[]},
+				{id:6,shopID:hex_md5("四季豆"),name:"四季豆",spec:[],practice:[
+				],taste:[]}
+			]
+			//封装获取元素的函数
+			function _(ele,num){
+				if(num == undefined){
+					return document.querySelectorAll(ele)
+				}
+				return document.querySelectorAll(ele)[num]
+			}
+			//自定义弹出框并设置定时器
+			var pop = {}
+			pop.alert = function(text,time){
+				var div_pop = document.createElement("div"),
+					div_alert = document.createElement("div")
+				div_pop.className = "pop active"
+				div_alert.innerHTML = text
+				div_alert.className = "alert"
+				div_pop.appendChild(div_alert)
+				document.body.appendChild(div_pop)
+				setTimeout(function(){
+					document.body.removeChild(div_pop)
+				},time)
+				
+			}
+			var shopCartList = []
+			//创建产品列表
+			for(var d = 0 ;d<data.length;d++ ){
+				var li = document.createElement('li')
+				li.setAttribute("ids",data[d].shopID)
+				li.innerHTML = data[d].name
+				_("ul.list",0).appendChild(li.cloneNode(true))
+			}
+			//通过点击 创建弹出框
+			
+			for(var l = 0;l<_('li').length;l++){
+				_('li',l).index = l;//设置li的下标
+				_('li',l).onclick = function(){//li触发点击事件
+					popup(data[this.index])
+				}
+			}
+			//创建购物车列表的函数
+			function shopCart(list,dataObj){
+				_('.shop-cart tbody',0).innerHTML = ""
+				for(var i = 0;i<list.length;i++){
+					var td_id = document.createElement('td'),
+						td_name = document.createElement('td'),
+						td_list = document.createElement("td"),
+						td_ad_list = document.createElement("td"),
+						td_taste = document.createElement("td"),
+						td_spec = document.createElement("td"),
+						td_num = document.createElement('td'),
+						td_btn = document.createElement('td'),
+						p = document.createElement('p'),
+						ap = document.createElement('p'),
+						tr = document.createElement('tr')
+					tr.className = "list"
+					_('.shop-cart tbody',0).appendChild(tr.cloneNode(true))
+					td_id.innerHTML = i
+					_('.shop-cart .list',i).appendChild(td_id)
+					td_name.innerHTML = list[i].name
+					_('.shop-cart .list',i).appendChild(td_name)
+					for(var t = 0;t<list[i].practice.length;t++){
+						p.innerHTML = list[i].practice[t].name+"("+list[i].practice[t].price+")"
+						td_list.appendChild(p.cloneNode(true))
+					}
+					_('.shop-cart .list',i).appendChild(td_list)
+					for(var a = 0;a<list[i].addPractice.length;a++){
+						ap.innerHTML = list[i].addPractice[a].name+"("+list[i].addPractice[a].price+")"
+						td_ad_list.appendChild(ap.cloneNode(true))
+					}
+					_('.shop-cart .list',i).appendChild(td_ad_list)
+					td_taste.innerHTML = list[i].taste
+					_('.shop-cart .list',i).appendChild(td_taste)
+					if(list[i].spec != undefined){
+						td_spec.innerHTML = list[i].spec
+					}else{
+						td_spec.innerHTML = ""
+					}
+					_('.shop-cart .list',i).appendChild(td_spec)
+					td_num.innerHTML = list[i].number
+					_('.shop-cart .list',i).appendChild(td_num)
+					td_btn.innerHTML = "<button class='btn'>操作</button><button class='del'>删除</button>"
+					_('.shop-cart .list',i).appendChild(td_btn)
+
+				}
+				for(var bt = 0;bt<_('.btn').length;bt++){
+					_('.btn',bt).index = bt;
+					_('.btn',bt).onclick = function(){
+						popup(dataObj,list[this.index],this.index)
+					}
+				}
+				for(var bt = 0;bt<_('.del').length;bt++){
+					_('.del',bt).index = bt;
+					_('.del',bt).onclick = function(){
+						list.splice(this.index,1)
+						shopCart(list,dataObj)
+					}
+				}
+			}
+			function popup(pData,btnList,index){
+				var	li = document.createElement('li'),
+					ul = document.createElement('ul'),
+					ulA = document.createElement('ul'),
+					ulT = document.createElement('ul'),
+					ulS = document.createElement('ul'),
+					div = document.createElement('div'),
+					bDiv = document.createElement('div'),
+					spanP = document.createElement('span'),
+					spanA = document.createElement('span'),
+					spanT = document.createElement('span'),
+					spanS = document.createElement('span'),
+					input = document.createElement('input'),
+					button = document.createElement("button"),
+					cBtn = document.createElement("button"),
+					addCheckArr = [],
+					checkArr = [],
+					obj = {
+							shopID:pData.shopID,
+							name:pData.name,
+							practice:[],
+							addPractice:[],
+							taste:"",
+							number:1,
+							spec:""
+						}//生成购物车产品对象
+				//设置弹出框显示
+				_(".popup",0).style.display = "flex" 
+				
+				/**
+				 * 创建弹出框： div class="popup-cont"
+				 * 创建做法：span
+				 * 创建做法列表：ul class = "practice"  循环输出做法列表 li 并给每一个li创建一个input标签  （复选框）class="check"
+				 * 创建口味：span
+				 * 创建口味列表：ul class = "taste" 循环输出口味列表 li
+				 * 创建按钮组：div class = "buttons"
+				 * 创建确定按钮：button class = "confirm-btn"
+				 * 
+				 */
+				//创建弹出框内容
+				div.className = "popup-cont"; 
+				_(".popup",0).appendChild(div)
+				//判断是否存在做法，存在则创建做法列表
+				if(pData.practice.length != 0){
+					spanP.innerHTML = "做法:"
+					_(".popup-cont",0).appendChild(spanP)
+					ul.className = "practice"
+					_(".popup-cont",0).appendChild(ul)
+					for(var i = 0;i<pData.practice.length;i++){
+						li.innerHTML = pData.practice[i].name+"("+pData.practice[i].price+")"
+						input.className = "check"
+						input.setAttribute("type","checkbox")
+						if(btnList != undefined){
+							for(var b = 0;b<btnList.practice.length;b++){
+								if(pData.practice[i].pid == btnList.practice[b].pid){
+									input.setAttribute("checked",true)
+									checkArr.push(i)
+									obj.practice.push(btnList.practice[b])
+								}
+							}
+						}
+						li.appendChild(input)
+						_(".practice",0).appendChild(li.cloneNode(true))
+						input.removeAttribute("checked")
+					}
+				}
+				//判断是否存在新增做法，存在则创建新增做法列表
+
+				if(pData.addPractice!=undefined){
+					spanA.innerHTML = "新增做法:"
+					_(".popup-cont",0).appendChild(spanA)
+					ulA.className = "add-practice"
+					_(".popup-cont",0).appendChild(ulA)
+					for(var i = 0;i<pData.addPractice.length;i++){
+						li.innerHTML = pData.addPractice[i].name+"("+pData.addPractice[i].price+")"
+						input.className = "add-check"
+						input.setAttribute("type","checkbox")
+						if(btnList != undefined){
+							for(var b = 0;b<btnList.addPractice.length;b++){
+								if(pData.addPractice[i].pid == btnList.addPractice[b].pid){
+									input.setAttribute("checked",true)
+									addCheckArr.push(i)
+									obj.addPractice.push(btnList.addPractice[b])
+								}
+							}
+						}
+						li.appendChild(input)
+						_(".add-practice",0).appendChild(li.cloneNode(true))
+						input.removeAttribute("checked")
+					}
+				}
+				//判断是否存在规格，存在则创建规格
+				if(pData.spec.length!= 0){
+					spanS.innerHTML = "规格:"
+					_(".popup-cont",0).appendChild(spanS)
+					ulS.className = "spec"
+					_(".popup-cont",0).appendChild(ulS)
+					for(var i = 0;i<pData.spec.length;i++){
+						li.innerHTML = pData.spec[i]
+						if(btnList != undefined){
+							if(pData.spec[i] == btnList.spec){
+								li.className = "active"
+								obj.spec = btnList.spec
+							}
+						}
+						_(".spec",0).appendChild(li.cloneNode(true))
+						li.className = ""
+					}
+				}
+				
+				//判断是否存在，存在则创建口味
+				if(pData.taste.length != 0){
+					spanT.innerHTML = "口味:"
+					_(".popup-cont",0).appendChild(spanT)
+					ulT.className = "taste"
+					_(".popup-cont",0).appendChild(ulT)
+					for(var i = 0;i<pData.taste.length;i++){
+						li.innerHTML = pData.taste[i]
+						if(btnList != undefined){
+							if(pData.taste[i] == btnList.taste){
+								li.className = "active"
+								obj.taste = btnList.taste
+							}
+						}
+						_(".taste",0).appendChild(li.cloneNode(true))
+						li.className = ""
+					}
+				}
+				
+				//创建按钮组
+				bDiv.className = "buttons"
+				_(".popup-cont",0).appendChild(bDiv)
+				button.className = "confirm-btn"
+				button.innerHTML = "确定"
+				cBtn.className = "cancel-btn"
+				cBtn.innerHTML = "取消"
+				_(".buttons",0).appendChild(button)
+				_(".buttons",0).appendChild(cBtn)
+				
+				//创建做法复选框的点击事件
+				for(var b = 0;b < _('.practice .check').length;b++){
+					_('.practice .check',b).index = b;
+					_('.practice .check',b).onclick = function(event){
+						//判断是否存在属性checked
+						if(this.getAttribute("checked")){
+							//删除属性checked
+							this.removeAttribute("checked")
+							//建立变量，确定数组是否存在该元素
+							var val = checkArr.indexOf(this.index) 
+							//判断数组是否存在该元素，如果是val的值则大于-1，否则等于-1
+							if(val > -1){
+								//删除数组元素
+								checkArr.splice(val,1)
+								//删除购物车对象里面的其中一种做法
+								obj.practice.splice(val,1)
+							}
+							return;
+						}
+						//判断是否已经选中两种做法,如果是，则取消点击
+//							if(checkArr.length>=2){
+//								//判断是IE或者不是IE
+//								event = event || window.event;
+//								//禁止元素默认点击事件
+//								event.preventDefault ? event.preventDefault() : event.returnValue = false;
+//								return;
+//							}
+						//循环复选框下标，判断当前点击的是哪个复选框，并把该复选框的下标添加到数组中
+						for(var c = 0;c<_('.practice .check').length;c++){
+							if(c == this.index){
+								//为了让上面的属性判断有作用,所以要给点击的复选框进行赋予属性
+								_('.practice .check',c).setAttribute("checked",true)
+								checkArr.push(c)
+								//给购物车对象里面的做法添加一种做法
+								obj.practice.push(pData.practice[c])
+							}
+						}
+					}
+				}
+				//创建新增做法复选框的点击事件
+				for(var b = 0;b < _('.add-practice .add-check').length;b++){
+					_('.add-practice .add-check',b).index = b;
+					_('.add-practice .add-check',b).onclick = function(event){
+						//判断是否存在属性checked
+						if(this.getAttribute("checked")){
+							//删除属性checked
+							this.removeAttribute("checked")
+							//建立变量，确定数组是否存在该元素
+							var val = addCheckArr.indexOf(this.index) 
+							//判断数组是否存在该元素，如果是val的值则大于-1，否则等于-1
+							if(val > -1){
+								//删除数组元素
+								addCheckArr.splice(val,1)
+								//删除购物车对象里面的其中一种做法
+								obj.addPractice.splice(val,1)
+							}
+							return;
+						}
+						//循环复选框下标，判断当前点击的是哪个复选框，并把该复选框的下标添加到数组中
+						for(var c = 0;c<_('.add-practice .add-check').length;c++){
+							if(c == this.index){
+								//为了让上面的属性判断有作用,所以要给点击的复选框进行赋予属性
+								_('.add-practice .add-check',c).setAttribute("checked",true)
+								addCheckArr.push(c)
+								//给购物车对象里面的做法添加一种做法
+								obj.addPractice.push(pData.addPractice[c])
+							}
+						}
+					}
+				}
+				//口味选中和取消
+				for(var t = 0;t<_(".taste li").length;t++){
+					_(".taste li",t).index = t;
+					_(".taste li",t).onclick = function(){
+						//取消所有的选项的class
+						for(var tl = 0;tl<_(".taste li").length;tl++){
+							_(".taste li",tl).className = ""
+						}
+						//单独给当前点击的口味赋予classname
+						_(".taste li",this.index).className = "active"
+						//给购物车对象添加口味
+						obj.taste = pData.taste[this.index]
+					}
+				}
+				//规格选中和取消
+				for(var t = 0;t<_(".spec li").length;t++){
+					_(".spec li",t).index = t;
+					_(".spec li",t).onclick = function(){
+						//取消所有的选项的class
+						for(var tl = 0;tl<_(".spec li").length;tl++){
+							_(".spec li",tl).className = ""
+						}
+						//单独给当前点击的口味赋予classname
+						_(".spec li",this.index).className = "active"
+						//给购物车对象添加口味
+						obj.spec = pData.spec[this.index]
+					}
+				}
+				_(".confirm-btn",0).onclick = function(){
+					if(btnList != undefined){
+						var osArr = []
+						for(var scl = 0;scl<shopCartList.length;scl++){
+							if(shopCartList[scl].shopID == obj.shopID){
+								if(shopCartList[scl].taste == obj.taste){
+									for (var sp = 0;sp<shopCartList[scl].practice.length;sp++) {
+										for (var op = 0;op<obj.practice.length;op++) {
+											if(shopCartList[scl].practice[sp].pid == obj.practice[op].pid){
+												osArr.push(shopCartList[scl].practice[sp])
+												if(osArr.length == obj.practice.length){
+													shopCartList[scl].number += obj.number
+													shopCartList.splice(index,1)
+													shopCart(shopCartList,pData)
+						                            _(".popup",0).style.display="none"
+						                            _(".popup",0).innerHTML = ""
+						                            return ;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						shopCartList[index] = obj
+						shopCart(shopCartList,pData)
+						_(".popup",0).style.display="none"
+						_(".popup",0).innerHTML = ""
+						return ;
+					}
+					//判断是否已经选择该商品需求的做法
+					if(obj.practice.length <1 && pData.practice.length != 0){
+						pop.alert("至少选择一件做法",3000)
+						return ;
+					}
+					//判断是否已经选择规格
+					if(obj.spec == "" && pData.spec.length != 0){
+						pop.alert("请选择规格",3000)
+						return ;
+					}
+					//判断是否已经选择口味
+					if(obj.taste == "" && pData.taste.length != 0){
+						pop.alert("请选择口味",3000)
+						return ;
+					}
+					//判断购物车的数组里面是否有数据
+					if(shopCartList.length<=0){
+						shopCartList.push(obj)
+						//调用购物车函数创建商品列表
+						shopCart(shopCartList,pData)
+						//处理完成事件之后，关闭弹出框并清除弹出框
+						_(".popup",0).style.display="none"
+						_(".popup",0).innerHTML = ""
+						return ;
+					}
+					//循环判断点击的是否为同个商品
+					for(var sl = 0;sl<shopCartList.length;sl++){
+						//如果是同个商品
+						if(shopCartList[sl].shopID == obj.shopID){
+							//判断是否选中的都是同样规格
+							if(shopCartList[sl].spec == obj.spec){
+								//判断是否选中的都是同样口味
+								if(shopCartList[sl].taste== obj.taste){
+									
+									//准备判断在点击相同商品的时候 选择的做法是否全部相同
+									if(shopCartList[sl].practice.length == 0){
+										
+										shopCartList[sl].number += 1
+										shopCart(shopCartList,pData)
+										_(".popup",0).style.display="none"
+										_(".popup",0).innerHTML = ""
+										return ;
+									}
+									var compareArr = []
+									var addCompareArr = []
+									//如果选中的都是一样的口味，则循环判断选中的做法是否全部一致
+									for(var sp = 0;sp < shopCartList[sl].practice.length;sp++ ){
+										for(var op = 0;op < obj.practice.length;op++){
+											//选择的做法如果一致
+											if(shopCartList[sl].practice[sp].pid == obj.practice[op].pid){
+												
+												//则给comparArr数组添加一个数据
+												compareArr.push(obj.practice[op])
+												if(compareArr.length == obj.practice.length){
+													console.log(shopCartList[sl].addPractice.length,obj.addPractice.length)
+													if(shopCartList[sl].addPractice.length == 0 && obj.addPractice.length == 0){
+														shopCartList[sl].number += 1
+														shopCart(shopCartList,pData)
+														_(".popup",0).style.display="none"
+														_(".popup",0).innerHTML = ""
+														return ;
+													}
+													for(var sap = 0;sap < shopCartList[sl].addPractice.length;sap++ ){
+														for(var oap = 0;oap < obj.addPractice.length;oap++){
+															if(shopCartList[sl].addPractice[sap].pid == obj.addPractice[oap].pid){
+																addCompareArr.push(obj.addPractice[oap])
+																if(addCompareArr.length == obj.addPractice.length){
+																	//如果一致，则给已经存在的商品的数量进行加1
+																	shopCartList[sl].number = parseInt(shopCartList[sl].number)+1
+																	//调用购物车函数创建商品列表
+																	shopCart(shopCartList,pData)
+																	//处理完成事件之后，关闭弹出框并清除弹出框
+																	_(".popup",0).style.display="none"
+																	_(".popup",0).innerHTML = ""
+																	return ;
+																}
+																
+															}
+															
+														}
+															
+													}
+												}
+												
+												
+												
+												//每次添加完数据，都要判断一下相同做法的数量是不是和已经存在的商品做法的数量一致
+												
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					/**
+					 * 点击的是相同的商品，但口味不同，则添加新的购物车商品
+					 * 点击的是相同的商品，口味相同，但做法不一致，则添加新的购物车商品
+					 * 点击的不是已经存在的商品，则添加新的购物车商品
+					 */
+					shopCartList.push(obj)
+					//调用购物车函数创建商品列表
+					shopCart(shopCartList,pData)
+					//处理完成事件之后，关闭弹出框并清除弹出框
+					_(".popup",0).style.display="none"
+					_(".popup",0).innerHTML = ""
+				}
+				//取消弹出框
+				_(".cancel-btn",0).onclick = function(){
+					//点击弹出框取消按钮，关闭弹出框并清除弹出框
+					_(".popup",0).style.display="none"
+					_(".popup",0).innerHTML = ""
+				}
+			}
+		</script>
+	</body>
+</html>

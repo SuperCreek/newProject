@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<style>
+			*{
+				margin:0;
+				padding:0;
+			}
+			.content{
+				height:2000px;
+			}
+			.back{
+				position:fixed;
+				bottom:50px;
+				right:50px;
+				width: 148px;
+				height:230px;
+				background:url(img/rocket_button_up.png) left top no-repeat;
+				display: none;
+			}
+			.back.scroll-top{
+				animation: back 1s;
+				-moz-animation: back 1s;
+				-webkit-animation: back 1s;
+				-ms-animation: back 1s;
+			}
+			.back.active1{
+				background:url(img/rocket_button_up.png) -149px top no-repeat;
+			}
+			.back.active2{
+				background:url(img/rocket_button_up.png) -298px top no-repeat;
+			}
+			.back.active3{
+				background:url(img/rocket_button_up.png) -447px top no-repeat;
+			}
+			.back.active4{
+				background:url(img/rocket_button_up.png) -596px top no-repeat;
+			}
+			.back.active5{
+				background:url(img/rocket_button_up.png) -745px top no-repeat;
+			}
+			@keyframes back{
+				from{top:760px}
+				to{top:-280px;}
+			}
+			@-moz-keyframes back{
+				from{top:760px}
+				to{top:-280px;}
+			}
+			@-webkit-keyframes back{
+				from{top:760px}
+				to{top:-280px;}
+			}
+			@-ms-keyframes back{
+				from{top:760px}
+				to{top:-280px;}
+			}
+		</style>
+		<div class="content">
+			
+		</div>
+		<div class="back">
+			
+		</div>
+		<script>
+			
+			window.onload = function(){
+				var back = document.querySelector('.back'),
+					i = 0,time,cla;
+				if(document.body.scrollTop>200){
+					back.style.display = "block"
+				}else{
+					back.style.display = "none"
+				}
+				window.onscroll = function(){
+					if(document.body.scrollTop>200){
+						back.style.display = "block"
+					}else{
+						back.style.display = "none"
+					}
+				}
+				back.onmouseover = function(){
+					time = setInterval(function(){
+						if(i<5){
+							i ++
+						}else{
+							i = 1
+						}
+						if(cla == undefined || cla == "undefined"){
+							back.className = "back active"+i
+							return ;
+						}
+						back.className = "back active"+i +" "+cla
+						
+					})
+					
+				}
+				back.onclick = function(){
+					cla = " scroll-top"
+					this.className += cla
+					setTimeout(function(){
+						back.className = "back"
+						clearInterval(time)
+						cla = "undefined"
+						back.style.display = "none"
+						
+					},1000)
+					window.scrollTo(0,0)
+					
+				}
+			}
+		</script>
+	</body>
+</html>

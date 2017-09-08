@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<style>
+			.form{
+				width:500px;
+			}
+			.form>label{
+				display: flex;
+				margin:30px 0;
+			}
+			.form>label>input{
+				width:50px;
+			}
+			.form>button{
+				width:100px;
+				height:35px;
+			}
+			.context{
+				width: 200px !important;
+			}
+			.down{
+				color:#333;
+				width:100px;
+				text-align: center;
+				text-decoration: none;
+				font-size:16px;
+				display: block;
+				border:1px solid #ccc;
+				padding:10px;
+				margin-top:20px;
+			}
+		</style>
+		<canvas id="canvas"></canvas>
+		<a href="javascript:;" class="down">点击下载</a>
+		<div class="form">
+			<label>
+				<span>尺寸大小：</span>
+				<input type="number" class="width" />
+				&nbsp; * &nbsp;
+				<input type="number" class="height" />
+			</label>
+			<label>
+				<span>文本内容：</span>
+				<input type="text" class="context" />
+			</label>
+			<label>
+				<span>字体大小：</span>
+				<input type="number" class="font-size" />&nbsp;px
+			</label>
+			<label>
+				<span>字体颜色：</span>
+				<input type="text" class="font-color" />
+			</label>
+			<label>
+				<span>背景颜色：</span>
+				<input type="text" class="bg-color" />
+			</label>
+			<label>
+				<span>选择生成的图片格式：</span>
+				<select class="format">
+					<option value="JPG">JPG</option>
+					<option value="PNG" selected>PNG</option>
+					<option value="GIF">GIF</option>
+				</select>
+			</label>
+			<button class="btn">提交</button>
+		</div>
+		<script>
+			function z(ele,index){
+				if(index != undefined){
+					return document.querySelectorAll(ele)[index]
+				}
+				return document.querySelector(ele)
+			}
+			var ctx = z("#canvas").getContext('2d'),
+				mPaint,selectVal=z(".format").value;
+			z(".btn").onclick = function(){
+				
+				var width = parseInt(z(".width").value),
+					height = parseInt(z(".height").value),
+					fontSize = parseInt(z(".font-size").value),
+					fontColor = z(".font-color").value,
+					bgColor = z(".bg-color").value,
+					context = z(".context").value
+				ctx.clearRect(0,0,width,height)
+				createBitMap(width,height,context,fontSize,bgColor,fontColor)	
+				
+			}
+			z(".format").onchange = function(){
+				selectVal = this.value
+			}
+			function createBitMap(width,height,context,fontSize,bgColor,fontColor){
+				z("#canvas").width = width;
+				z("#canvas").height = height
+				ctx.beginPath()
+				ctx.moveTo(width,0);
+				ctx.lineTo(width,height)
+				ctx.lineTo(0,height)
+				ctx.lineTo(0,0)
+				ctx.fillStyle = bgColor;
+				ctx.fill()
+				ctx.font = fontSize+"px 微软雅黑";
+				ctx.fillStyle = fontColor;
+				ctx.textAlign = "center"
+				ctx.textBaseline = "middle";
+				ctx.fillText(context,width/2,height/2);
+				ctx.save()
+				var url = z("#canvas").toDataURL("image/"+selectVal).replace("image/"+selectVal, "image/octet-stream"); 
+				z(".down").href= url
+				z(".down").setAttribute("download",(new Date()).getTime() + '.'+selectVal.toLowerCase())
+			}
+			createBitMap(300,200,"300X200",50,"#ccc","#f1f1f1")
+		</script>
+	</body>
+</html>

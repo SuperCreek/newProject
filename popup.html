@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<!--<link rel="stylesheet" href="css/popup.css" />-->
+		<script type="text/javascript" src="js/popup.js" ></script>
+	</head>
+	<body >
+		<!--<div class="popup">
+			<form action="index.html" class="alert">
+				<h1>提示框</h1>
+				<p>你需要的可能就是这些了！！有问题吗？</p>
+				<button>确定</button>
+			</form>
+		</div>-->
+		<button onclick="noticeClick()">提示弹出框按钮</button>
+		<button onclick="unNoticeClick()">提示弹出框按钮(没有遮罩层的)</button>
+		<button onclick="alertClick()">确定弹出框按钮</button>
+		<button onclick="setAlertClick()">确定弹出框按钮(改变提示文字的)</button>
+		<button onclick="confirmClick()">确定弹出框按钮</button>
+		<button onclick="setConfirmClick()">确定弹出框按钮(改变提示文字的)</button>
+		<script>
+			function noticeClick(){
+				popup.notice("测试的",3000)
+			}
+			function unNoticeClick(){
+				popup.notice("测试的",3000,false)
+			}
+			function alertClick(){
+				popup.alert("就是这样的结果了")
+			}
+			function setAlertClick(){
+				popup.alert("就是这样的结果了",function(){
+					//这里是点击确定后的所触发的函数
+				},"这是可以改变提示的")
+			}
+			function confirmClick(){
+				popup.confirm("就是这样的结果了",function(){
+					//这是确定按钮的函数处理
+				},function(){
+					//这是取消按钮的函数处理
+				})
+			}
+			function setConfirmClick(){
+				popup.confirm("就是这样的结果了",function(){
+					//这是确定按钮的函数处理
+				},function(){
+					//这是取消按钮的函数处理
+				},"这里是提示改变")
+			}
+			
+			popup.custom = {
+				contBackColor:null,//改变弹出框内容背景
+				submitButton:null,//改变弹出框确定按钮背景
+				clearButton:null,//改变弹出框取消按钮背景
+				buttonColor:["#fff","#000"] //[0]为确定按钮的字体颜色，[1]为取消按钮的字体颜色
+			}
+
+		</script>
+	</body>
+</html>

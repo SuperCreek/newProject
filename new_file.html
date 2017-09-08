@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<select name="">
+			<option value="a">a</option>
+			<option value="b">b</option>
+			<option value="c">c</option>
+			<option value="d">d</option>
+		</select>
+		<script>
+			console.log(document.querySelector('select').value )
+			
+			document.querySelectorAll('select')[0].addEventListener("change",function(){
+				console.log(this.value)
+			})
+			
+		</script>
+	</body>
+</html>
