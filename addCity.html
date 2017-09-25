@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html ng-app="city">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	</head>
+	<body ng-controller="cityCtrl">
+		<style>
+			label.select{
+				width: 500px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				border-bottom:1px dashed red;
+			}
+			label.select>button{
+				border:none;
+				outline: none;
+				height:30px;
+				width:80%;
+				background:none;
+				text-align: right;
+			}
+			.city-popup{
+				position: fixed;
+				top:0;
+				bottom:0;
+				left:0;
+				right:0;
+				background:rgba(0,0,0,.5)
+			}
+			.city{
+				position: absolute;
+				top:0;
+				bottom:0;
+				left:0;
+				right:0;
+				margin:auto;
+				width:300px;
+				height:200px;
+				background:white;
+			}
+			select{
+				border:none;
+				outline: none;
+			}
+			.city>label{
+				padding:10px 20px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+			.city>label>select{
+				width: 50%;
+			}
+			.city>button{
+				width: 100px;
+				height:35px;
+				border:1px solid #ccc;
+				background:#fff;
+				display: block;
+				margin:30px auto 0;
+				cursor: pointer;
+			}
+		</style>
+		<label class="select">
+			<span>所在地</span>
+			<button ng-click="getAddress()" ng-bind="user.address"></button> 
+		</label>
+		<div class="city-popup" ng-if="user.cityShow">
+			<div class="city">
+				<label>
+					<span>省份</span>
+					<select ng-model="user.province">
+						<option>请选择</option>
+						<option ng-repeat="item in location.province">{{item.text}}</option>
+					</select>
+				</label>
+				<label>
+					<span>城市</span>
+					<select ng-model="user.city">
+						<option>请选择</option>
+						<option ng-repeat="item in location.city">{{item.text}}</option>
+					</select>
+				</label>
+				<label>
+					<span>区/县</span>
+					<select ng-model="user.area">
+						<option>请选择</option>
+						<option ng-repeat="item in location.area">{{item.text}}</option>
+					</select>
+				</label>
+				<button ng-click = "setAddress()">提交</button>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/angular.min.js" ></script>
+		<script>
+			angular.module("city",[])
+			.controller("cityCtrl",function($scope,$http){
+				$scope.user = {
+					address : "请选择",
+					province:"请选择",
+					city:"请选择",
+					area:"请选择",
+					cityData :[],
+					cityShow:false
+				}
+				$scope.location = {
+					province : [],
+					city:[],
+					area:[]
+				}
+				$scope.getAddress = function(){
+					$scope.user.cityShow = true
+					$http({
+						method:"GET",
+						url:"js/city.data.json"
+					}).success(function(data){
+						angular.forEach(data,function(val){
+							$scope.location.province.push(val)
+						})
+						$scope.user.province = data[0].text
+						$scope.user.cityData = data
+					}).error(function(err){
+						console.log(err)
+					})
+				}
+				$scope.$watch("user.province",function(val,oldVal){
+					if(val == oldVal){
+						return ;
+					}
+					$scope.location.city =[]
+					angular.forEach($scope.location.province,function(cityVal){
+						if(val == cityVal.text){
+							$scope.location.city = cityVal.children
+						}
+					})
+					$scope.user.city = $scope.location.city[0].text
+				})
+				$scope.$watch("user.city",function(val,oldVal){
+					if(val == oldVal){
+						return ;
+					}
+					$scope.location.area =[]
+					angular.forEach($scope.location.city,function(cityVal){
+						if(val == cityVal.text){
+							$scope.location.area = cityVal.children
+						}
+					})
+					$scope.user.area = $scope.location.area[0].text
+				})
+				$scope.setAddress = function(){
+					$scope.user.cityShow = false
+					$scope.user.address = $scope.user.province +" "+$scope.user.city+" "+$scope.user.area
+				}
+			})
+		</script>
+	</body>
+</html>
