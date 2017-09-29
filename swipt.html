@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	</head>
+	<body>
+		<style>
+			*{
+				margin:0;
+				padding:0;
+			}
+			li{
+				list-style: none;
+			}
+			.silde{
+				width: 100%;
+				overflow: hidden;
+				position:relative;
+			}
+			.silde>ul{
+				overflow: hidden;
+				display: flex;
+			}
+			.silde>ul>li>img{
+				width: 414px;
+			}
+			.swiper-pagination{
+				position:absolute;
+				left:0;
+				right: 0;
+				bottom:10px;
+				margin:auto;
+				display: flex;
+				display: -webkit-flex;
+				justify-content: center;
+				flex-direction:row;
+			}
+			.swiper-pagination>span{
+				width:10px;
+				height:10px;
+				border-radius:50%;
+				background:#8693a2;
+				display: block;
+				margin-right:10px;
+				cursor: pointer;
+			}
+			.swiper-pagination>span:nth-last-child(1){
+				margin-right: 0;
+			}
+			.swiper-pagination>span.swiper-pagination-bullet-active{
+				background:#5ce55c;
+
+		</style>
+		<div class="silde swiper-container">
+			<ul class="swiper-wrapper">
+				<li class="swiper-slide"><img src="img/banner_01.jpg"></li>
+				<li class="swiper-slide"><img src="img/banner_02.jpg"></li>
+				<li class="swiper-slide"><img src="img/banner_03.jpg"></li>
+			</ul>
+			<div class="swiper-pagination"></div>
+			<div class="next"></div>
+		</div>
+		<script type="text/javascript" src="js/jquery-1.12.4.min.js" ></script>
+		<script type="text/javascript" src="js/swiper-3.4.2.min.js" ></script>
+		<script>
+			console.log(window.innerWidth)
+			var mySwiper = new Swiper('.swiper-container',{
+					direction:"horizontal",
+					loop:true,
+					pagination : '.swiper-pagination',
+					paginationClickable :true,
+					autoplay:5000,
+					width:window.innerWidth
+				})
+			$(function(){
+				$('.silde>ul').width($('.silde>ul>li').width()*$('.silde>ul>li').length)
+			})
+		</script>
+	</body>
+</html>
