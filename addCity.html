@@ -94,9 +94,46 @@
 				<button ng-click = "setAddress()">提交</button>
 			</div>
 		</div>
+		<style>
+			.move{
+				width: 100px;
+				height:100px;
+				background:red;
+			}
+		</style>
+		<div class="move" ng-touchmove="">
+			
+		</div>
 		<script type="text/javascript" src="js/angular.min.js" ></script>
+		<script type="text/javascript" src="js/angular-touch.min.js" ></script>
 		<script>
-			angular.module("city",[])
+			angular.module("city",['ngTouch'])
+			.directive("ngTouchmove", function () {
+			    return {
+			        controller: ["$scope", "$element", function ($scope, $element) {
+			
+			            $element.bind("touchstart", onTouchStart);
+			            function onTouchStart(event) {
+			            	console.log(123)
+			                event.preventDefault();
+			                $element.bind("touchmove", onTouchMove);
+			                $element.bind("touchend", onTouchEnd);
+			            }
+			            function onTouchMove(event) {
+			            	console.log("滑动")
+			                var method = $element.attr("ng-touchmove");
+			                $scope.$event = event;
+			                $scope.$apply(method);
+			            }
+			            function onTouchEnd(event) {
+			                event.preventDefault();
+			                $element.unbind("touchmove", onTouchMove);
+			                $element.unbind("touchend", onTouchEnd);
+			            }
+			
+			        }]
+			    }
+			})
 			.controller("cityCtrl",function($scope,$http){
 				$scope.user = {
 					address : "请选择",
@@ -105,6 +142,9 @@
 					area:"请选择",
 					cityData :[],
 					cityShow:false
+				}
+				$scope.amove = function(){
+					console.log(123)
 				}
 				$scope.location = {
 					province : [],
@@ -155,6 +195,7 @@
 					$scope.user.address = $scope.user.province +" "+$scope.user.city+" "+$scope.user.area
 				}
 			})
+			
 		</script>
 	</body>
 </html>
